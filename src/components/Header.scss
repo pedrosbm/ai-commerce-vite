@@ -1,0 +1,60 @@
+@keyframes colors {
+    0%{
+        color: darkcyan;
+    }
+    
+    50%{
+        color: cornflowerblue;
+    }
+    
+    100%{
+        color: darkcyan;
+    }
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    height: 5rem;
+    width: 100%;
+    background-color: whitesmoke;
+    border-bottom: 1px solid #d4d4d4;
+    box-shadow: 0px 0px 20px -5px #b8b8b8;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    strong  {
+        animation-name: colors;
+        animation-duration: 3s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+    }
+    
+    .title  {
+        text-decoration: none;
+        h1  {
+            color: cornflowerblue;
+        }
+    }
+
+    .menu   {
+        display: inherit;
+        align-items: center;
+        
+        position: absolute;
+        right: 1rem;
+        
+        .userIcon   {
+            cursor: pointer;
+            font-size: 2.5rem;
+            color: darkcyan;
+            transition: 150ms ease-in-out;
+        }
+
+        .userIcon:hover {
+            color: cornflowerblue;
+        }
+    }
+}
