@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { BsInfoCircleFill } from "react-icons/bs";
-import { Page, Produto } from "@/types";
+import { PageProdutos } from "@/types";
 import { useEffect, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 
@@ -11,96 +11,94 @@ import Header from "../components/Header"
 
 import './Home.scss'
 import { Skeleton } from "@/components/ui/skeleton";
-
-type pageProdutos = {
-    content: Produto[],
-    pageable: Page
-}
+import { useNavigate } from "react-router-dom";
 
 type productOptions = {
-    size: number
+  size: number
 }
 
 const apiUrl = import.meta.env.VITE_API_URL as string
 
 const Home = () => {
-    const [products, setProducts] = useState<pageProdutos>()
-    const [options, setOptions] = useState<productOptions>({ size: 5 })
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [products, setProducts] = useState<PageProdutos>()
+  const [options, setOptions] = useState<productOptions>({ size: 5 })
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
-    useEffect(() => {
-        fetch(`${apiUrl}/produto?size=${options.size}`, {
-            method: 'GET',
-        }).then(response => {
-            return response.ok && response.json()
-        }).then(json => {
-            setProducts(json)
-            setIsLoading(false)
-        })
-    }, [options])
+  const navigate = useNavigate()
 
-    return (
-        <div>
-            <Header />
-            <section className="home">
-                <div className="products">
-                    <h1>Produtos</h1>
-                    <div className="productList">
-                        <hr />
+  useEffect(() => {
+    fetch(`${apiUrl}/produto?size=${options.size}`, {
+      method: 'GET',
+    }).then(response => {
+      return response.ok && response.json()
+    }).then(json => {
+      setProducts(json)
+      setIsLoading(false)
+    })
+  }, [options])
 
-                        <Carousel className="row">
-                            <h2>Para você :) </h2>
-                            <CarouselContent>
-                                {products?.content.map(product => (
-                                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                                        <Card onClick={() => { console.log("Selecionado") }}>
-                                            <CardHeader className="flex items-center justify-center">
-                                                <img className="w-[15rem] h-[15rem] object-contain" src={product.imagem} />
-                                            </CardHeader>
+  return (
+    <div>
+      <Header />
+      <section className="home">
+        <div className="products">
+          <h1>Produtos</h1>
+          <div className="productList">
+            <hr />
 
-                                            <TooltipProvider>
-                                                <Tooltip>
-                                                    <TooltipTrigger>
-                                                        <CardContent className="text-start">
-                                                            <h4 className="name">{product.nome}</h4>
+            <Carousel className="row">
+              <h2>Para você :) </h2>
+              <CarouselContent>
+                {products?.content.map(product => (
+                  <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                    <Card className="cursor-pointer" onClick={() => { navigate(`/produto/${product.produtoId}`) }}>
+                      <CardHeader className="flex items-center justify-center">
+                        <img className="w-[15rem] h-[15rem] object-contain" src={product.imagem} />
+                      </CardHeader>
 
-                                                            <p className="flex gap-1"><BsInfoCircleFill className="text-[1.2rem]" />{product.descricao.slice(0, 30).concat("...")} </p>
-                                                        </CardContent>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent className="w-[12rem]">
-                                                        <p>{product.descricao}</p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <CardContent className="text-start">
+                              <h4 className="name">{product.nome}</h4>
 
-                                            <CardDescription className="p-4 flex justify-between">
-                                                <span className="text-green-500 text-lg">R${product.preco}</span>
-                                                <Button value={product.produtoId}>Comprar</Button>
-                                            </CardDescription>
-                                        </Card>
-                                    </CarouselItem>
-                                ))}
-                                <CarouselItem className="md:basis-1/2 lg:basis-1/3" >
-                                    {isLoading == false ?
-                                        <Card className="w-full h-full flex flex-col items-center justify-center cursor-pointer border-dashed" onClick={() => { setOptions(prevstate => ({ size: prevstate.size + 2 })) }}>
-                                            <CardHeader>
-                                                <CiCirclePlus className="text-[10rem]" />
-                                            </CardHeader>
-                                            <CardContent>
-                                                <p>ver mais</p>
-                                            </CardContent>
-                                        </Card>
-                                        : <Skeleton className="w-full h-full"/>}
-                                </CarouselItem>
-                            </CarouselContent>
-                            <CarouselPrevious />
-                            <CarouselNext />
-                        </Carousel>
-                    </div>
-                </div>
-            </section>
+                              <p className="flex gap-1"><BsInfoCircleFill className="text-[1.2rem]" />{product.descricao.length > 30 ? product.descricao.slice(0, 30).concat("...") : product.descricao} </p>
+                            </CardContent>
+                          </TooltipTrigger>
+                          <TooltipContent className="w-[12rem]">
+                            <p>{product.descricao}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      <CardDescription className="p-4 flex justify-between">
+                        <span className="text-green-500 text-lg">R${product.preco}</span>
+                        <Button value={product.produtoId}>Adicionar ao carriho</Button>
+                      </CardDescription>
+                    </Card>
+                  </CarouselItem>
+                ))}
+                <CarouselItem className="md:basis-1/2 lg:basis-1/3" >
+                  {isLoading == false ?
+                    <Card className="w-full h-full flex flex-col items-center justify-center cursor-pointer border-dashed" onClick={() => { setOptions(prevstate => ({ size: prevstate.size + 2 })) }}>
+                      <CardHeader>
+                        <CiCirclePlus className="text-[10rem]" />
+                      </CardHeader>
+                      <CardContent>
+                        <p>ver mais</p>
+                      </CardContent>
+                    </Card>
+                    : <Skeleton className="w-full h-full" />}
+                </CarouselItem>
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
         </div>
-    )
+      </section>
+    </div>
+  )
 }
 
 export default Home

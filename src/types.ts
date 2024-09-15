@@ -63,4 +63,9 @@ type Page = {
     empty: boolean
 }
 
-export type { Produto, Categoria, Cliente, Pedido, ItensPedido, Page }
+type PageProdutos = {
+    content: Produto[],
+    pageable: Page
+}  
+
+export type { Produto, Categoria, Cliente, Pedido, ItensPedido, PageProdutos }
