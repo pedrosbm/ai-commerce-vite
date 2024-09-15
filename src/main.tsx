@@ -6,11 +6,14 @@ import { ThemeProvider } from './contextProvider/ThemeProvider.tsx'
 import "./index.css"
 import 'normalize.css'
 import './Config.scss'
+import { CartProvider } from './contextProvider/CartProvider.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider defaultTheme='light'>
-    <App />
-    </ThemeProvider>
+    <CartProvider>
+      <ThemeProvider defaultTheme='light'>
+      <App />
+      </ThemeProvider>
+    </CartProvider>
   </StrictMode>,
 )

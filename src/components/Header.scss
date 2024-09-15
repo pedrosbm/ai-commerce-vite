@@ -42,18 +42,38 @@
     .menu   {
         display: inherit;
         align-items: center;
-        
+        gap: 1rem;
+
         position: absolute;
         right: 1rem;
-        
-        .userIcon   {
+
+
+        .cart   {
+            display: flex;
+            .cartCount{
+                position: relative;
+                right: 1rem;
+                top: 1.2rem;
+                width: 1.6rem;
+                height: 1.6rem;
+                background: white;
+                padding: 0.5rem;
+                border: 2px dashed;
+                border-radius: 10rem;
+                line-height: 5px;
+                font-size: 0.8rem;
+                text-align: center;
+            }
+        }
+
+        .icon   {
             cursor: pointer;
             font-size: 2.5rem;
             color: darkcyan;
             transition: 150ms ease-in-out;
         }
 
-        .userIcon:hover {
+        .icon:hover {
             color: cornflowerblue;
         }
     }
