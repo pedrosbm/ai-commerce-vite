@@ -21,7 +21,7 @@ const Product = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [size, setSize] = useState<number>(5)
 
-  const { id } = useParams();
+  let { id } = useParams();
 
   const navigate = useNavigate()
 
@@ -35,8 +35,8 @@ const Product = () => {
       setProduct(json)
       setIsLoading(false)
     })
-  }, [])
-
+  }, [id])
+  
   useEffect(() => {
     setIsLoading(true)
     fetch(`${apiUrl}/produto?size=${size}&categoria=${product?.categoria.nome}`, {
@@ -48,6 +48,18 @@ const Product = () => {
       setIsLoading(false)
     })
   }, [product])
+
+  const fetchNewProduct = (newId : number) => {
+    setIsLoading(true)
+    fetch(`${apiUrl}/produto/${newId}`, {
+      method: 'GET',
+    }).then(response => {
+      return response.ok && response.json()
+    }).then(json => {
+      setProduct(json)
+      setIsLoading(false)
+    })
+  }
 
   return (
     <div>
@@ -98,7 +110,7 @@ const Product = () => {
           <CarouselContent>
             {products?.content.map(product => (
               <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                <Card className="cursor-pointer" onClick={() => { navigate(`/produto/${product.produtoId}`) }}>
+                <Card className="cursor-pointer" onClick={() => { fetchNewProduct(product.produtoId) }}>
                   <CardHeader className="flex items-center justify-center">
                     <img className="w-[8rem] h-[8rem] object-contain" src={product.imagem} />
                   </CardHeader>
