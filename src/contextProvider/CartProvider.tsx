@@ -21,6 +21,8 @@ const CartProvider = ({ children }: PropsWithChildren) => {
             let array = produtos.split(",")
             setProdutos(array)
             setCartCount(array.length)
+        } else {
+            setCartCount(0)
         }
     }, [])
     
