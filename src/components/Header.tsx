@@ -17,7 +17,7 @@ const Header = () => {
             <Link className="title" to="/"><h1><strong>Ai.</strong>Commerce</h1></Link>
             <div className='menu'>
                 <FaUserCircle onClick={() => { navigate("/user") }} className='icon' />
-                <div className="cart">
+                <div className="cart" onClick={() => {navigate("/cart")}}>
                     <FaShoppingCart className="icon" />
                     <p className="cartCount">{cartCount}</p>
                 </div>

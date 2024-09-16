@@ -68,4 +68,16 @@ type PageProdutos = {
     pageable: Page
 }  
 
-export type { Produto, Categoria, Cliente, Pedido, ItensPedido, PageProdutos }
+type PagePedidos = {
+    content: Pedido[],
+    pageable: Page
+}  
+
+type Item = {
+    itemsId: number,
+    quantidade: number,
+    preco: number,
+    pedido: Pedido,
+    produto: Produto
+}
+export type { Produto, Categoria, Cliente, Pedido, ItensPedido, PageProdutos, PagePedidos, Item }

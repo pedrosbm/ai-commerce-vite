@@ -7,13 +7,16 @@ import "./index.css"
 import 'normalize.css'
 import './Config.scss'
 import { CartProvider } from './contextProvider/CartProvider.tsx'
+import { AuthProvider } from './contextProvider/AuthenticationProvider.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <CartProvider>
-      <ThemeProvider defaultTheme='light'>
-      <App />
-      </ThemeProvider>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <ThemeProvider defaultTheme='light'>
+          <App />
+        </ThemeProvider>
+      </CartProvider>
+    </AuthProvider>
   </StrictMode>,
 )

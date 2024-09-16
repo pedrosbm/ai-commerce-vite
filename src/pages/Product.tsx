@@ -1,17 +1,21 @@
-import { useNavigate, useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
-import { PageProdutos, Produto } from "@/types"
-import Header from "@/components/Header"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { AiOutlineShoppingCart } from "react-icons/ai";
-import "./Product.scss"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Button } from "@/components/ui/button"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
+import Header from "@/components/Header"
+
+import { AiOutlineShoppingCart } from "react-icons/ai";
 import { BsInfoCircleFill } from "react-icons/bs"
 import { CiCirclePlus } from "react-icons/ci"
 import { MdOutlinePayment } from "react-icons/md"
+
+import { useNavigate, useParams } from "react-router-dom"
+import { useContext, useEffect, useState } from "react"
+import "./Product.scss"
+
+import { PageProdutos, Produto } from "@/types"
+import { CartContext } from "@/contextProvider/CartProvider"
 
 const apiUrl = import.meta.env.VITE_API_URL as string
 
@@ -22,6 +26,8 @@ const Product = () => {
   const [size, setSize] = useState<number>(5)
 
   let { id } = useParams();
+
+  const { addItem } = useContext(CartContext)
 
   const navigate = useNavigate()
 
@@ -36,7 +42,7 @@ const Product = () => {
       setIsLoading(false)
     })
   }, [id])
-  
+
   useEffect(() => {
     setIsLoading(true)
     fetch(`${apiUrl}/produto?size=${size}&categoria=${product?.categoria.nome}`, {
@@ -49,7 +55,7 @@ const Product = () => {
     })
   }, [product])
 
-  const fetchNewProduct = (newId : number) => {
+  const fetchNewProduct = (newId: number) => {
     setIsLoading(true)
     fetch(`${apiUrl}/produto/${newId}`, {
       method: 'GET',
@@ -94,9 +100,8 @@ const Product = () => {
                   <CardHeader>
                     <CardTitle>Opções</CardTitle>
                   </CardHeader>
-                  <CardContent className="flex justify-between">  
-                    <Button>Adicionar ao carrinho <AiOutlineShoppingCart /></Button>
-                    <Button variant={"outline"}>Comprar <MdOutlinePayment /></Button>
+                  <CardContent className="flex justify-between">
+                    <Button onClick={addItem} value={product?.produtoId}>Adicionar ao carriho</Button>
                   </CardContent>
                 </Card>
               </div>
@@ -132,14 +137,14 @@ const Product = () => {
 
                   <CardDescription className="p-4 flex justify-between">
                     <span className="text-green-500 text-lg">R${product.preco}</span>
-                    <Button value={product.produtoId}>Adicionar ao carriho</Button>
+                    <Button onClick={addItem} value={product.produtoId}>Adicionar ao carriho</Button>
                   </CardDescription>
                 </Card>
               </CarouselItem>
             ))}
             <CarouselItem className="md:basis-1/2 lg:basis-1/6" >
               {isLoading == false ?
-                <Card className="w-full h-full flex flex-col items-center justify-center cursor-pointer border-dashed" onClick={() => { setSize(prevstate => (prevstate + 2))}}>
+                <Card className="w-full h-full flex flex-col items-center justify-center cursor-pointer border-dashed" onClick={() => { setSize(prevstate => (prevstate + 2)) }}>
                   <CardHeader>
                     <CiCirclePlus className="text-[10rem]" />
                   </CardHeader>

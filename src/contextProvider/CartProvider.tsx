@@ -1,42 +1,66 @@
 import { Produto } from "@/types";
-import { createContext, PropsWithChildren, useEffect, useState } from "react";
+import { createContext, MouseEvent, PropsWithChildren, useEffect, useState } from "react";
 
 type context = {
     cartCount: number,
     produtos: string[],
-    addItem: () => void,
-    removeItem: () => void 
+    addItem: (e: MouseEvent<HTMLButtonElement>) => void,
+    removeItem: (e: MouseEvent<HTMLButtonElement>) => void
 }
 
 const CartContext = createContext<context>({} as context)
 
-const CartProvider = ({ children } : PropsWithChildren) => {
+const CartProvider = ({ children }: PropsWithChildren) => {
     const [produtos, setProdutos] = useState<string[]>([] as string[])
     const [cartCount, setCartCount] = useState<number>(0)
 
     useEffect(() => {
         let produtos = localStorage.getItem("Produtos")
 
-        if (produtos != null){
+        if (produtos != null) {
             let array = produtos.split(",")
             setProdutos(array)
             setCartCount(array.length)
         }
     }, [])
-
-    const addItem = () => {
-
-    }
-
-    const removeItem = () => {
+    
+    const addItem = (e: MouseEvent<HTMLButtonElement>) => {
+        const produtoId = e.currentTarget.value
         
+        let produtos = localStorage.getItem("Produtos")
+        
+        if (produtos != null) {
+            let array = produtos.split(",")
+            array.push(produtoId.toString())
+            setCartCount(array.length)
+            setProdutos(array)
+            localStorage.setItem("Produtos", array.join())
+            
+        } else {
+            localStorage.setItem("Produtos", produtoId.toString())
+        }
     }
 
-    return(
+    const removeItem = (e: MouseEvent<HTMLButtonElement>) => {
+        const produtoId = e.currentTarget.value
+        
+        let produtos = localStorage.getItem("Produtos")
+        
+        if (produtos != null) {
+            let array = produtos.split(",")
+            array.splice(array.indexOf(produtoId), 1);
+            setProdutos(array)
+            setCartCount(array.length)
+
+            localStorage.setItem("Produtos", array.join())
+        }
+    }
+
+    return (
         <CartContext.Provider value={{ cartCount, produtos, addItem, removeItem }}>
             {children}
         </CartContext.Provider>
     )
 }
 
-export {CartContext, CartProvider}
+export { CartContext, CartProvider }

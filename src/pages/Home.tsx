@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { BsInfoCircleFill } from "react-icons/bs";
 import { PageProdutos } from "@/types";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 
 import Header from "../components/Header"
@@ -12,6 +12,7 @@ import Header from "../components/Header"
 import './Home.scss'
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "react-router-dom";
+import { CartContext } from "@/contextProvider/CartProvider";
 
 type productOptions = {
   size: number
@@ -25,6 +26,8 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const navigate = useNavigate()
+
+  const { addItem } = useContext(CartContext)
 
   useEffect(() => {
     fetch(`${apiUrl}/produto?size=${options.size}`, {
@@ -40,19 +43,18 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <section className="home">
+      <section className="home bg-slate-200">
         <div className="products">
           <h1>Produtos</h1>
           <div className="productList">
             <hr />
-
             <Carousel className="row">
               <h2>Para você :) </h2>
               <CarouselContent>
                 {products?.content.map(product => (
                   <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                    <Card className="cursor-pointer" onClick={() => { navigate(`/produto/${product.produtoId}`) }}>
-                      <CardHeader className="flex items-center justify-center">
+                    <Card className="cursor-pointer" >
+                      <CardHeader className="flex items-center justify-center" onClick={() => { navigate(`/produto/${product.produtoId}`) }}>
                         <img className="w-[15rem] h-[15rem] object-contain" src={product.imagem} />
                       </CardHeader>
 
@@ -73,7 +75,7 @@ const Home = () => {
 
                       <CardDescription className="p-4 flex justify-between">
                         <span className="text-green-500 text-lg">R${product.preco}</span>
-                        <Button value={product.produtoId}>Adicionar ao carriho</Button>
+                        <Button onClick={addItem} value={product.produtoId}>Adicionar ao carriho</Button>
                       </CardDescription>
                     </Card>
                   </CarouselItem>
